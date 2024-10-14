@@ -1,7 +1,7 @@
 from textwrap import dedent
 import openai
 import json
-from pydantic import BaseModel 
+from pydantic import BaseModel
 from config import Config
 
 openai.api_key = Config.OPENAI_API_KEY
@@ -9,7 +9,7 @@ openai.api_key = Config.OPENAI_API_KEY
 def generate_exam_questions(prompt):
     response = openai.chat.completions.create(
         model="gpt-4o-mini",
-        messages= 
+        messages=
             [
 				{ "role": 'system', "content": 'You are a helpful assistant.' },
 				{ "role": 'user', "content": prompt },
@@ -46,13 +46,13 @@ def generate_exam_questions(prompt):
                     "additionalProperties": False
                 },
                 "strict":True
-            }            
+            }
         }
     )
-    
-    
+
+
     questions_text = response.choices[0].message.content
-    
+
     questions = parse_questions(questions_text)
     # print(questions)
     return questions
@@ -66,12 +66,12 @@ def parse_questions(questions_text):
     for item in questions_data['questions']:
         question_text = item['question']
         correct_answer = item['answer']
-        output = item['output'].split('\n')  
+        output = item['output'].split('\n')
 
         answers = []
         for option in output:
             answer_text = option.strip()
-            is_correct = correct_answer in answer_text  
+            is_correct = correct_answer in answer_text
             answers.append({
                 "answer_text": answer_text,
                 "correct": is_correct
