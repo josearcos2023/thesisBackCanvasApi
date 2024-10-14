@@ -23,14 +23,6 @@ def create_canvas_quiz(course_id, questions):
     # Añadir las preguntas al quiz
     for question in questions:
         question_params = {
-            # 'question':
-            # {
-            #     'question_name': "Texto de prueba",
-            #     'question_text': question['question_text'],
-            #     'question_type': 'multiple_choice_question',
-            #     'points_possible': 1,
-            #     'answers': []
-            # }
             'question_name': "Texto de prueba",
             'question_text': question['question_text'],
             'question_type': 'multiple_choice_question',
@@ -39,11 +31,10 @@ def create_canvas_quiz(course_id, questions):
         }
         
         # print(question['question_text'])
-
         # Crea la lista de respuestas
         for answer in question['answers']:
             answer_data = {
-                'answer_text': answer['answer_text'],
+                'text': answer['answer_text'],
                 'weight': 100 if answer['correct'] else 0
             }
             
@@ -55,10 +46,11 @@ def create_canvas_quiz(course_id, questions):
         # print(f"Question Params: {question_params}")
         
         print(question_params)
-        
+        print("----------------")
         # Agrega la pregunta al quiz
-        quiz.create_question(**question_params)
-        # quiz.create_question(question_params)
+        # quiz.create_question(**question_params)
+        # quiz.create_question(question=question_params)
+        quiz.create_question(question_params)
 
     return quiz.id
     # return question_params

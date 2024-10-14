@@ -11,7 +11,6 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-# Ruta para generar preguntas del examen usando OpenAI
 @app.route('/generate_exam', methods=['POST'])
 def generate_exam():
     data = request.json
@@ -23,14 +22,12 @@ def generate_exam():
     questions = generate_exam_questions(prompt)
     return questions
 
-# Ruta para crear un quiz en Canvas con las preguntas generadas
 @app.route('/create_quiz', methods=['POST'])
 def create_quiz():
     data = request.json
-    # course_id = data.get('course_id')
     course_id = data.get('course_id')
     questions = data.get('questions')
-
+    # print(questions)
     if not course_id or not questions:
         return jsonify({"error": "Course ID and questions are required"}), 400
 
