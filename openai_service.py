@@ -1,7 +1,6 @@
 from textwrap import dedent
 import openai
 import json
-from pydantic import BaseModel 
 from config import Config
 
 openai.api_key = Config.OPENAI_API_KEY
