@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from openai_service import generate_exam_questions
 from canvas_service import create_canvas_quiz
 from dotenv import load_dotenv
@@ -8,6 +9,7 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)
 
 # Ruta para generar preguntas del examen usando OpenAI
 @app.route('/generate_exam', methods=['POST'])
