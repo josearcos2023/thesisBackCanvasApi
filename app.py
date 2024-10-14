@@ -25,6 +25,7 @@ def generate_exam():
 @app.route('/create_quiz', methods=['POST'])
 def create_quiz():
     data = request.json
+    # course_id = data.get('course_id')
     course_id = data.get('course_id')
     questions = data.get('questions')
 
