@@ -1,7 +1,11 @@
 from canvasapi import Canvas
 from config import Config
+# import json
 
 canvas = Canvas(Config.CANVAS_API_URL, Config.CANVAS_API_KEY)
+
+## cursos disponibles
+# courses = canvas.get_courses()
 
 def create_canvas_quiz(course_id, questions):
     # Obtener el curso
@@ -23,7 +27,6 @@ def create_canvas_quiz(course_id, questions):
     # Añadir las preguntas al quiz
     for question in questions:
         question_params = {
-            'question_name': "Texto de prueba",
             'question_text': question['question_text'],
             'question_type': 'multiple_choice_question',
             'points_possible': 1,
@@ -51,6 +54,24 @@ def create_canvas_quiz(course_id, questions):
         # quiz.create_question(**question_params)
         quiz.create_question(question=question_params)
         # quiz.create_question(question_params)
-
+    
+    ## listado de cursos disponibles
+    # for course in courses:
+    #     print(f"ID: {course.id}, Nombre: {course.name}")
+    
     return quiz.id
     # return question_params
+
+##Obtener los cursos e ID de cursos
+def get_courses_info():
+    courses = canvas.get_courses()
+    courses_info = []
+    
+    for course in courses:
+        courses_info.append({
+            'id': course.id,
+            'name': course.name
+        })
+    
+    # return json.dumps(courses_info, indent=4)
+    return courses_info
