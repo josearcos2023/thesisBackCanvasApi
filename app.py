@@ -13,38 +13,38 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/')
-def login():
-    auth_url = f"{Config.CANVAS_API_URL}/login/oauth2/auth"
-    params = {
-        "client_id": Config.CANVAS_CLIENT_ID,
-        "response_type": "code",
-        "redirect_uri": Config.REDIRECT_URI,
-    }
-    request_url = requests.Request('GET', auth_url, params=params).prepare().url
-    return redirect(request_url)
+# @app.route('/')
+# def login():
+#     auth_url = f"{Config.CANVAS_API_URL}/login/oauth2/auth"
+#     params = {
+#         "client_id": Config.CANVAS_CLIENT_ID,
+#         "response_type": "code",
+#         "redirect_uri": Config.REDIRECT_URI,
+#     }
+#     request_url = requests.Request('GET', auth_url, params=params).prepare().url
+#     return redirect(request_url)
 
-@app.route('/callback')
-def callback():
-    code = request.args.get('code')
-    token_url = f"{Config.CANVAS_API_URL}/login/oauth2/token"
-    data = {
-        "grant_type": "authorization_code",
-        "client_id": Config.CANVAS_CLIENT_ID,
-        "client_secret": Config.CANVAS_CLIENT_SECRET,
-        "redirect_uri": Config.REDIRECT_URI,
-        "code": code,
-    }
+# @app.route('/callback')
+# def callback():
+#     code = request.args.get('code')
+#     token_url = f"{Config.CANVAS_API_URL}/login/oauth2/token"
+#     data = {
+#         "grant_type": "authorization_code",
+#         "client_id": Config.CANVAS_CLIENT_ID,
+#         "client_secret": Config.CANVAS_CLIENT_SECRET,
+#         "redirect_uri": Config.REDIRECT_URI,
+#         "code": code,
+#     }
     
-    # Intercambio de código por token
-    response = requests.post(token_url, data=data)
-    token_response = response.json()
-    access_token = token_response.get('access_token')
+#     # Intercambio de código por token
+#     response = requests.post(token_url, data=data)
+#     token_response = response.json()
+#     access_token = token_response.get('access_token')
     
-    # Guardar el token en la sesión
-    session['access_token'] = access_token
+#     # Guardar el token en la sesión
+#     session['access_token'] = access_token
     
-    return "Login exitoso! Puedes usar este token para llamar a la API de Canvas."
+#     return "Login exitoso! Puedes usar este token para llamar a la API de Canvas."
 
 @app.route('/api/generate_exam', methods=['POST'])
 def generate_exam():
