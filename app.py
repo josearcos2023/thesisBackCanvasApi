@@ -1,15 +1,50 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, redirect, session, url_for
 from flask_cors import CORS
 from openai_service import generate_exam_questions
 from canvas_service import create_canvas_quiz, get_courses_info
+from config import Config
 from dotenv import load_dotenv
 import os
+import requests
 
 # Cargar variables de entorno
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
+
+@app.route('/')
+def login():
+    auth_url = f"{Config.CANVAS_API_URL}/login/oauth2/auth"
+    params = {
+        "client_id": Config.CANVAS_CLIENT_ID,
+        "response_type": "code",
+        "redirect_uri": Config.REDIRECT_URI,
+    }
+    request_url = requests.Request('GET', auth_url, params=params).prepare().url
+    return redirect(request_url)
+
+@app.route('/callback')
+def callback():
+    code = request.args.get('code')
+    token_url = f"{Config.CANVAS_API_URL}/login/oauth2/token"
+    data = {
+        "grant_type": "authorization_code",
+        "client_id": Config.CANVAS_CLIENT_ID,
+        "client_secret": Config.CANVAS_CLIENT_SECRET,
+        "redirect_uri": Config.REDIRECT_URI,
+        "code": code,
+    }
+    
+    # Intercambio de código por token
+    response = requests.post(token_url, data=data)
+    token_response = response.json()
+    access_token = token_response.get('access_token')
+    
+    # Guardar el token en la sesión
+    session['access_token'] = access_token
+    
+    return "Login exitoso! Puedes usar este token para llamar a la API de Canvas."
 
 @app.route('/api/generate_exam', methods=['POST'])
 def generate_exam():
@@ -40,4 +75,4 @@ def courses():
     return jsonify(courses_info)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000,debug=True)

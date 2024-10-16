@@ -73,5 +73,4 @@ def get_courses_info():
             'name': course.name
         })
     
-    # return json.dumps(courses_info, indent=4)
     return courses_info

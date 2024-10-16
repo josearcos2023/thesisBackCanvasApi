@@ -8,7 +8,7 @@ openai.api_key = Config.OPENAI_API_KEY
 def generate_exam_questions(prompt):
     response = openai.chat.completions.create(
         model="gpt-4o-mini",
-        messages= 
+        messages=
             [
 				{ "role": 'system', "content": 'You are a helpful assistant.' },
 				{ "role": 'user', "content": prompt },
@@ -18,7 +18,6 @@ def generate_exam_questions(prompt):
         top_p= 1,
         frequency_penalty= 0.0,
         presence_penalty= 0.0,
-        # stop= ['/'],
 
         response_format={
             "type":"json_schema",
