@@ -35,12 +35,18 @@ def generate_exam_questions(prompt):
                                     "answer": {"type": "string"},
                                     "output": {"type": "string"}
                                 },
-                                "required":["question","answer","output"],
+                                "required":[
+                                    "question",
+                                    "answer",
+                                    "output"
+                                    ],
                                 "additionalProperties":False
                             }
                         },
+                        "title":{"type":"string"},
+                        "description":{"type":"string"},
                     },
-                    "required":["questions"],
+                    "required":["title","description","questions"],
                     "additionalProperties": False
                 },
                 "strict":True
@@ -48,20 +54,21 @@ def generate_exam_questions(prompt):
         }
     )
     
-    
-    questions_text = response.choices[0].message.content
-    
-    questions = parse_questions(questions_text)
+    exam_content = response.choices[0].message.content
+    # print(exam_content)
+    questions = parse_questions(exam_content)
     # print(questions)
     return questions
-    # return questions_text
+
 
 def parse_questions(questions_text):
-    questions_data = json.loads(questions_text)
+    data = json.loads(questions_text)
 
     questions = []
+    title=data['title']
+    description=data['description']
+    for item in data['questions']:
 
-    for item in questions_data['questions']:
         question_text = item['question']
         correct_answer = item['answer']
         output = item['output'].split('\n')  
@@ -76,10 +83,16 @@ def parse_questions(questions_text):
             })
 
         question = {
+
             "question_text": question_text,
             "answers": answers
         }
 
         questions.append(question)
 
-    return questions
+    # return questions
+    return {
+            "title": title,
+            "description": description,
+            "questions": questions
+        }

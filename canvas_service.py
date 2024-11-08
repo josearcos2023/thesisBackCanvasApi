@@ -2,6 +2,9 @@ from canvasapi import Canvas
 from config import Config
 # import json
 
+
+
+
 canvas = Canvas(Config.CANVAS_API_URL, Config.CANVAS_API_KEY)
 
 ## cursos disponibles
@@ -29,7 +32,7 @@ def create_canvas_quiz(course_id, questions):
         question_params = {
             'question_text': question['question_text'],
             'question_type': 'multiple_choice_question',
-            'points_possible': 1,
+            'points_possible': 2,
             'answers': []
         }
         

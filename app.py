@@ -62,11 +62,15 @@ def create_quiz():
     data = request.json
     course_id = data.get('course_id')
     questions = data.get('questions')
-    # print(questions)
+    # title = data.get('title')
+    # description = data.get('description')
+    
+    # if not course_id or not questions or not title  or not description:
     if not course_id or not questions:
         return jsonify({"error": "Ingresar ID del curso y preguntas"}), 400
 
     quiz_id = create_canvas_quiz(course_id, questions)
+    # quiz_id = create_canvas_quiz(course_id, questions, title, description)
     return jsonify({"message": "Quizz creado exitosamente", "quiz_id": quiz_id})
 
 @app.route('/api/courses', methods=['GET'])
@@ -76,3 +80,10 @@ def courses():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000,debug=True)
+
+## se envia el string con la llave de canvas
+@app.route('/api/keys', methods=['POST'])
+def api_key():
+    data=request.json
+    apikey=data.get('apikey')
+    return jsonify({"api_key":apikey})
