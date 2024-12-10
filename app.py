@@ -11,7 +11,16 @@ import requests
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+# CORS(app)
+
+# Configuración de CORS para permitir peticiones desde localhost:3000 - TEST
+CORS(app, resources={
+    r"/api/*": {
+        "origins": ["http://localhost:3000"],
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type"]
+    }
+})
 
 # @app.route('/')
 # def login():
@@ -84,10 +93,24 @@ def create_quiz():
 
 # Método POST requiere que se ejecute cuando se ingrese como input 
 # el api_key en front
-@app.route('/api/courses', methods=['POST'])
+# @app.route('/api/courses', methods=['POST'])
+# def courses():
+#     data = request.json
+#     api_key = data.get('api_key')  # { "api_key": "your_canvas_api_key" }
+
+#     if not api_key:
+#         return jsonify({"error": "API key is required"}), 400
+
+#     courses_info = get_courses_info(api_key)
+#     return jsonify(courses_info)
+
+# método POST requiere que se ejecute cuando se ingrese como input - TEST
+@app.route('/api/courses', methods=['POST', 'OPTIONS'])
 def courses():
+    if request.method == 'OPTIONS':
+        return '', 204
     data = request.json
-    api_key = data.get('api_key')  # { "api_key": "your_canvas_api_key" }
+    api_key = data.get('api_key')
 
     if not api_key:
         return jsonify({"error": "API key is required"}), 400
@@ -99,8 +122,27 @@ if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000,debug=True)
 
 ## se envia el string con la llave de canvas
-@app.route('/api/keys', methods=['POST'])
+# @app.route('/api/keys', methods=['POST'])
+# def api_key():
+#     data=request.json
+#     apikey=data.get('apikey')
+#     return jsonify({"api_key":apikey})
+
+# TST API KEY
+# @app.route('/api/keys', methods=['POST'])
+# def api_key():
+#     data = request.json
+#     print("Received data:", data)  # Para depuración
+#     api_key = data.get('api_key')
+#     if not api_key:
+#         return jsonify({"error": "API key is required"}), 400
+#     return jsonify({"api_key": api_key})
+@app.route('/api/keys', methods=['POST', 'OPTIONS'])
 def api_key():
-    data=request.json
-    apikey=data.get('apikey')
-    return jsonify({"api_key":apikey})
+    if request.method == 'OPTIONS':
+        return '', 204
+    data = request.json
+    api_key = data.get('api_key')
+    if not api_key:
+        return jsonify({"error": "API key is required"}), 400
+    return jsonify({"api_key": api_key})
