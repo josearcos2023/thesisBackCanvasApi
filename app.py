@@ -62,20 +62,38 @@ def create_quiz():
     data = request.json
     course_id = data.get('course_id')
     questions = data.get('questions')
-    # title = data.get('title')
-    # description = data.get('description')
+    title = data.get('title') # comentar 
+    description = data.get('description') # comentar
     
     # if not course_id or not questions or not title  or not description:
     if not course_id or not questions:
         return jsonify({"error": "Ingresar ID del curso y preguntas"}), 400
 
-    quiz_id = create_canvas_quiz(course_id, questions)
-    # quiz_id = create_canvas_quiz(course_id, questions, title, description)
+    quiz_id = create_canvas_quiz(
+        course_id, 
+        questions,
+        title, # comentar
+        description #comentar
+        )
     return jsonify({"message": "Quizz creado exitosamente", "quiz_id": quiz_id})
 
-@app.route('/api/courses', methods=['GET'])
+# @app.route('/api/courses', methods=['GET'])
+# def courses():
+#     courses_info = get_courses_info()
+#     return jsonify(courses_info)
+
+
+# Método POST requiere que se ejecute cuando se ingrese como input 
+# el api_key en front
+@app.route('/api/courses', methods=['POST'])
 def courses():
-    courses_info = get_courses_info()
+    data = request.json
+    api_key = data.get('api_key')  # { "api_key": "your_canvas_api_key" }
+
+    if not api_key:
+        return jsonify({"error": "API key is required"}), 400
+
+    courses_info = get_courses_info(api_key)
     return jsonify(courses_info)
 
 if __name__ == "__main__":
