@@ -11,16 +11,7 @@ import requests
 load_dotenv()
 
 app = Flask(__name__)
-# CORS(app)
-
-# Configuración de CORS para permitir peticiones desde localhost:3000 - TEST
-CORS(app, resources={
-    r"/api/*": {
-        "origins": ["http://localhost:3000"],
-        "methods": ["GET", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type"]
-    }
-})
+CORS(app)
 
 # @app.route('/')
 # def login():
@@ -44,15 +35,15 @@ CORS(app, resources={
 #         "redirect_uri": Config.REDIRECT_URI,
 #         "code": code,
 #     }
-    
+
 #     # Intercambio de código por token
 #     response = requests.post(token_url, data=data)
 #     token_response = response.json()
 #     access_token = token_response.get('access_token')
-    
+
 #     # Guardar el token en la sesión
 #     session['access_token'] = access_token
-    
+
 #     return "Login exitoso! Puedes usar este token para llamar a la API de Canvas."
 
 @app.route('/api/generate_exam', methods=['POST'])
@@ -73,7 +64,7 @@ def create_quiz():
     questions = data.get('questions')
     title = data.get('title') # cambio 101224
     description = data.get('description') # cambio 101224
-    
+
     if not course_id or not questions:
         return jsonify({"error": "Ingresar ID del curso y preguntas"}), 400
 
@@ -85,32 +76,13 @@ def create_quiz():
         )
     return jsonify({"message": "Quizz creado exitosamente", "quiz_id": quiz_id})
 
-# @app.route('/api/courses', methods=['GET'])
-# def courses():
-#     courses_info = get_courses_info()
-#     return jsonify(courses_info)
 
-
-# Método POST requiere que se ejecute cuando se ingrese como input 
+# Método POST requiere que se ejecute cuando se ingrese como input
 # el api_key en front
-# @app.route('/api/courses', methods=['POST'])
-# def courses():
-#     data = request.json
-#     api_key = data.get('api_key')  # { "api_key": "your_canvas_api_key" }
-
-#     if not api_key:
-#         return jsonify({"error": "API key is required"}), 400
-
-#     courses_info = get_courses_info(api_key)
-#     return jsonify(courses_info)
-
-# método POST requiere que se ejecute cuando se ingrese como input - TEST
-@app.route('/api/courses', methods=['POST', 'OPTIONS'])
+@app.route('/api/courses', methods=['POST'])
 def courses():
-    if request.method == 'OPTIONS':
-        return '', 204
     data = request.json
-    api_key = data.get('api_key')
+    api_key = data.get('api_key')  # { "api_key": "your_canvas_api_key" }
 
     if not api_key:
         return jsonify({"error": "API key is required"}), 400
@@ -121,28 +93,10 @@ def courses():
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000,debug=True)
 
-## se envia el string con la llave de canvas
-# @app.route('/api/keys', methods=['POST'])
-# def api_key():
-#     data=request.json
-#     apikey=data.get('apikey')
-#     return jsonify({"api_key":apikey})
-
-# TST API KEY
-# @app.route('/api/keys', methods=['POST'])
-# def api_key():
-#     data = request.json
-#     print("Received data:", data)  # Para depuración
-#     api_key = data.get('api_key')
-#     if not api_key:
-#         return jsonify({"error": "API key is required"}), 400
-#     return jsonify({"api_key": api_key})
-@app.route('/api/keys', methods=['POST', 'OPTIONS'])
+# se envia el string con la llave de canvas
+@app.route('/api/keys', methods=['POST'])
 def api_key():
-    if request.method == 'OPTIONS':
-        return '', 204
-    data = request.json
-    api_key = data.get('api_key')
-    if not api_key:
-        return jsonify({"error": "API key is required"}), 400
-    return jsonify({"api_key": api_key})
+    data=request.json
+    apikey=data.get('apikey')
+    return jsonify({"api_key":apikey})
+
