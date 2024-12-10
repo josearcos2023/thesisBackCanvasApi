@@ -62,18 +62,17 @@ def create_quiz():
     data = request.json
     course_id = data.get('course_id')
     questions = data.get('questions')
-    title = data.get('title') # comentar 
-    description = data.get('description') # comentar
+    title = data.get('title') # cambio 101224
+    description = data.get('description') # cambio 101224
     
-    # if not course_id or not questions or not title  or not description:
     if not course_id or not questions:
         return jsonify({"error": "Ingresar ID del curso y preguntas"}), 400
 
     quiz_id = create_canvas_quiz(
         course_id, 
         questions,
-        title, # comentar
-        description #comentar
+        title, # cambio 101224
+        description #cambio 101224
         )
     return jsonify({"message": "Quizz creado exitosamente", "quiz_id": quiz_id})
 

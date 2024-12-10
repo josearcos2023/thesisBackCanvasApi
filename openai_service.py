@@ -13,7 +13,7 @@ def generate_exam_questions(prompt):
 				{ "role": 'system', "content": 'You are a helpful assistant.' },
 				{ "role": 'user', "content": prompt },
 			],
-        temperature= 0,
+        temperature= 0.3,
         max_tokens= 800,
         top_p= 1,
         frequency_penalty= 0.0,
